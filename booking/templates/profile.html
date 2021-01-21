@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.get_full_name }}{% endblock %}
+{% block header %}Профиль пользователя {{ profile_user.get_full_name }}{% endblock %}
+{% block content %}
+
+<main role="main" class="container">
+    <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                    <div class="card">
+                            <div class="card-body">
+                                    <div class="h2">
+                                        <!-- Имя автора -->
+                                        {{ profile_user.get_full_name }}
+                                    </div>
+                                    <div class="h3 text-muted">
+                                         <!-- username автора -->
+                                         @{{ profile_user.get_username }}
+                                    </div>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                            <div class="h6 text-muted">
+                                            Подписчиков: XXX <br />
+                                            Подписан: XXX
+                                            </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                            <div class="h6 text-muted">
+                                                <!-- Количество записей -->
+                                                Записей: {{ user_reservation_count }}
+                                            </div>
+                                    </li>
+                            </ul>
+                    </div>
+            </div>
+
+            <div class="col-md-9">
+                {% for reservation in page %}
+                {% include "includes/reservation_item.html" with reservation=reservation %}
+                {% endfor %}
+     </div>
+    </div>
+</main>
+
+{% if page.has_other_pages %}
+{% include "includes/paginator.html" with items=page paginator=paginator%}
+{% endif %}
+{% endblock %}

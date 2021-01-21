@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Записи сообщества {{ group }}{% endblock %}
+{% block header %}{{ group }}{% endblock %}
+{% block content %}
+    <p>
+        Бронирования для рабочего места {{ room.description }}
+    </p>
+{% for reservation in page %}
+{% include "includes/reservation_item.html" with reservation=reservation %}
+{% if not forloop.last %}<hr>{% endif %}
+{% endfor %}
+{% if page.has_other_pages %}
+{% include "includes/paginator.html" with items=page paginator=paginator%}
+{% endif %}
+{% endblock %}

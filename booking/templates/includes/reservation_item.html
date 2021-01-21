@@ -1,0 +1,28 @@
+<div class="card mb-3 mt-1 shadow-sm">
+  <div class="card-body">
+    <p class="card-text">
+      <a name="reservation_{{ reservation.id }}" href="{% url 'reservation:profile' reservation.author.username %}">
+        <strong class="d-block text-gray-dark">@{{ reservation.author }}</strong>
+      </a>
+    <p>
+      Автор: {{ reservation.author }}, дата бронирования: {{ reservation.created|date:"d E Y" }}
+    </p>
+    <p>Рабочее место: {{ reservation.room }} забронировано с {{ reservation.datetime_from|date:"H:i d E Y" }} по {{ reservation.datetime_to|date:"H:i d E Y" }}</p>
+    </p>
+
+    <!-- Если пост относится к какому-нибудь сообществу, то отобразим ссылку на него через # -->
+    {% if reservation.room %}
+    <a class="card-link muted" href="{% url 'reservation:room' reservation.room.slug %}">
+      <strong class="d-block text-gray-dark">#{{ reservation.room.name }}</strong>
+    </a>
+    {% endif %}
+
+        {% if user == reservation.author %}
+        <a class="btn btn-sm btn-info" href="{% url 'reservation:reservation_edit' reservation.author.username reservation.id %}" role="button">
+          Редактировать
+        </a>
+        {% endif %}
+      </div>
+
+      <small class="text-muted">{{ reservation.created }}</small>
+    </div>

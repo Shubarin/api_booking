@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.get_full_name }}{% endblock %}
+{% block header %}Запись пользователя {{ profile_user.get_full_name }}{% endblock %}
+{% block content %}
+
+<main role="main" class="container">
+    <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                <div class="card">
+                        <div class="card-body">
+                                <div class="h2">
+                                    <!-- Имя автора -->
+                                    {{ profile_user.get_full_name }}
+                                </div>
+                                <div class="h3 text-muted">
+                                     <!-- username автора -->
+                                     @{{ profile_user.get_username }}
+                                </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                        <div class="h6 text-muted">
+                                        Подписчиков: XXX <br />
+                                        Подписан: XXX
+                                        </div>
+                                </li>
+                                <li class="list-group-item">
+                                        <div class="h6 text-muted">
+                                            <!--Количество записей -->
+                                            Записей: {{ user_reservation_count }}
+                                        </div>
+                                </li>
+                        </ul>
+                </div>
+        </div>
+
+        <div class="col-md-9">
+
+            <!-- Пост -->
+                <div class="card mb-3 mt-1 shadow-sm">
+                        <div class="card-body">
+                                <p class="card-text">
+                                        <a href="/{{ profile_user.get_username }}/"><strong class="d-block text-gray-dark">@{{ profile_user.get_username }}</strong></a>
+                            <h3>
+                                Автор: {{ reservation.author }}, дата бронирования: {{ reservation.created|date:"d E Y" }}
+                            </h3>
+                            <p>Рабочее место: {{ reservation.room }} забронировано с {{ reservation.datetime_from|date:"H:i d E Y" }} по {{ reservation.datetime_to|date:"H:i d E Y" }}</p>
+                            </p>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group ">
+                                                <!-- Ссылка на редактирование, показывается только автору записи -->
+                                            {% if user.is_authenticated and profile_user == user%}
+                                                <a class="btn btn-sm text-muted" href="/{{ profile_user.get_username }}/{{ reservation.pk }}/edit" role="button">Редактировать</a>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Дата публикации  -->
+                                        <small class="text-muted">{{ reservation.created|date:"d E Y г. h:m" }}</small>
+                                </div>
+                        </div>
+                </div>
+     </div>
+    </div>
+</main>
+
+{% endblock %}
