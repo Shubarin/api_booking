@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.urls import path, include
+from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -7,7 +7,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.routers import DefaultRouter
 
 from . import views
-
 
 app_name = 'reservation'
 
@@ -34,12 +33,11 @@ urlpatterns = [
         name='schema-redoc'),
 ]
 
-
 router = DefaultRouter()
-router.register('reservations', views.ReservationViewSet, basename='ReservationView')
+router.register('reservations', views.ReservationViewSet,
+                basename='ReservationView')
 router.register('rooms', views.RoomViewSet, basename='RoomsView')
 router.register('users', views.UserViewSet, basename='UserView')
-
 
 urlpatterns += [
     path('', views.index, name='index'),
@@ -47,7 +45,8 @@ urlpatterns += [
     path('room/<slug:slug>/', views.room_reservations, name='room'),
     path('new/', views.new_reservation, name="new_reservation"),
     path('<str:username>/', views.profile, name='profile'),
-    path('<str:username>/<int:reservation_id>/', views.reservation_view, name='reservation'),
+    path('<str:username>/<int:reservation_id>/', views.reservation_view,
+         name='reservation'),
     path(
         '<str:username>/<int:reservation_id>/edit/',
         views.reservation_edit,

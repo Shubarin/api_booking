@@ -2,17 +2,16 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions, status
-from rest_framework.permissions import IsAdminUser
+from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
 from .filters import RoomFilterBackend
 from .forms import ReservationForm
 from .models import Reservation, Room, User
 from .permissions import IsAuthorOrReadOnly
-from .serializers import UserSerializer, ReservationSerializer, RoomSerializer
+from .serializers import ReservationSerializer, RoomSerializer, UserSerializer
 
 RECORDS_ON_THE_PAGE = 10
 
@@ -20,27 +19,27 @@ RECORDS_ON_THE_PAGE = 10
 def index(request):
     reservations = Reservation.objects.all()
     paginator = Paginator(reservations, RECORDS_ON_THE_PAGE)
-    page_number = request.GET.get("page")
+    page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     context = {
-        "paginator": paginator,
-        "page": page
+        'paginator': paginator,
+        'page': page
     }
-    return render(request, "index.html", context)
+    return render(request, 'index.html', context)
 
 
 def room_reservations(request, slug):
     room = get_object_or_404(Room, slug=slug)
     reservations = room.reservation.all()
     paginator = Paginator(reservations, RECORDS_ON_THE_PAGE)
-    page_number = request.GET.get("page")
+    page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     context = {
-        "paginator": paginator,
-        "room": room,
-        "page": page
+        'paginator': paginator,
+        'room': room,
+        'page': page
     }
-    return render(request, "room.html", context)
+    return render(request, 'room.html', context)
 
 
 @login_required
@@ -50,9 +49,9 @@ def new_reservation(request):
         reservation = form.save(commit=False)
         reservation.author = request.user
         reservation.save()
-        return redirect("reservation:index")
+        return redirect('reservation:index')
 
-    return render(request, "reservation_new.html", {"form": form})
+    return render(request, 'reservation_new.html', {'form': form})
 
 
 def profile(request, username):
@@ -91,12 +90,12 @@ def reservation_edit(request, username, reservation_id):
                                     author__username=username)
     reservation_author_user = reservation.author
     if current_user != reservation_author_user:
-        return redirect("reservation:index")
+        return redirect('reservation:index')
 
     form = ReservationForm(request.POST or None, instance=reservation)
     if form.is_valid():
         form.save()
-        return redirect("reservation:index")
+        return redirect('reservation:index')
 
     return render(request, 'reservation_new.html', {'form': form,
                                                     'action_text': 'Редактировать'})
@@ -200,7 +199,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 	    свободных в указанный временной промежуток.
         """
         try:
-            # получаем параметры запроса, если они не валидны шлем статус 400
+            # получаем параметры запроса, если они невалидны шлем статус 400
             datetime_from = self.request.query_params.get('datetime_from', None)
             if datetime_from:
                 datetime_from = datetime.datetime.fromisoformat(datetime_from)
